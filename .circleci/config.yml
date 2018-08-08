@@ -96,7 +96,9 @@ jobs:
 
       - run:
         name: Setting the application key
-        command: php artisan key:generate
+        command:
+          - |
+          php artisan key:generate
 
       #- run:
       #    name: Install NodeJS Packages
@@ -119,7 +121,9 @@ jobs:
       # Seed the database
       - run:
          name: Seed the database
-         command: php artisan db:seed
+         command:
+          - |
+          php artisan db:seed
 
       #- run:
       #   name: Compile Javascript & CSS for Browser Testing
