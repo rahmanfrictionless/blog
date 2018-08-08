@@ -4,26 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6115334a10b224a252e4012e10504962",
+    "content-hash": "a18ce6d78a8296d1295eef921e1f3472",
     "packages": [
         {
             "name": "aacotroneo/laravel-saml2",
-            "version": "0.11.1",
+            "version": "dev-remove_mcrypt",
             "source": {
                 "type": "git",
-                "url": "https://github.com/aacotroneo/laravel-saml2.git",
-                "reference": "21c01a5d0397e958bd995f4e09a52a8e788bbbe6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/aacotroneo/laravel-saml2/zipball/21c01a5d0397e958bd995f4e09a52a8e788bbbe6",
-                "reference": "21c01a5d0397e958bd995f4e09a52a8e788bbbe6",
-                "shasum": ""
+                "url": "https://github.com/aacotroneo/laravel-saml2",
+                "reference": "b7354c18734e1593dbd08b2f25cfff14ce023a5b"
             },
             "require": {
                 "ext-openssl": "*",
                 "illuminate/support": ">=5.0.0",
-                "onelogin/php-saml": "^2.10",
+                "onelogin/php-saml": "3.0.0.x-dev",
                 "php": ">=5.4.0"
             },
             "require-dev": {
@@ -45,7 +39,6 @@
                     "Aacotroneo\\Saml2\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -58,12 +51,12 @@
             "description": "A Laravel package for Saml2 integration as a SP (service provider) based on OneLogin toolkit, which is much lightweight than simplesamlphp",
             "homepage": "https://github.com/aacotroneo/laravel-saml2",
             "keywords": [
-                "SAML2",
                 "laravel",
                 "onelogin",
-                "saml"
+                "saml",
+                "saml2"
             ],
-            "time": "2018-02-19T01:04:09+00:00"
+            "time": "2018-05-31T18:52:34+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -982,43 +975,40 @@
         },
         {
             "name": "onelogin/php-saml",
-            "version": "v2.14.0",
+            "version": "3.0.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/onelogin/php-saml.git",
-                "reference": "939f509143e95c21ab9720d2bfd5220c5828016d"
+                "reference": "e0c5827d7ccff72b6cf19f55420cad0e4eea5faf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onelogin/php-saml/zipball/939f509143e95c21ab9720d2bfd5220c5828016d",
-                "reference": "939f509143e95c21ab9720d2bfd5220c5828016d",
+                "url": "https://api.github.com/repos/onelogin/php-saml/zipball/e0c5827d7ccff72b6cf19f55420cad0e4eea5faf",
+                "reference": "e0c5827d7ccff72b6cf19f55420cad0e4eea5faf",
                 "shasum": ""
             },
             "require": {
-                "ext-curl": "*",
-                "ext-dom": "*",
-                "ext-mcrypt": "*",
-                "ext-openssl": "*",
-                "php": ">=5.3.2"
+                "php": ">=5.4",
+                "robrichards/xmlseclibs": "^3.0"
             },
             "require-dev": {
-                "pdepend/pdepend": "1.1.0",
-                "phploc/phploc": "*",
-                "phpunit/phpunit": "4.8",
-                "satooshi/php-coveralls": "1.0.1",
-                "sebastian/phpcpd": "*",
-                "squizlabs/php_codesniffer": "2.9.0"
+                "pdepend/pdepend": "^2.5.0",
+                "php-coveralls/php-coveralls": "^1.0.2 || ^2.0",
+                "phploc/phploc": "^2.1 || ^3.0 || ^4.0",
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5 || ^7.1",
+                "sebastian/phpcpd": "^2.0 || ^3.0 || ^4.0",
+                "squizlabs/php_codesniffer": "^3.1.1"
             },
             "suggest": {
-                "ext-gettext": "Install gettext and php5-gettext libs to handle translations"
+                "ext-curl": "Install curl lib to be able to use the IdPMetadataParser for parsing remote XMLs",
+                "ext-gettext": "Install gettext and php5-gettext libs to handle translations",
+                "ext-openssl": "Install openssl lib in order to handle with x509 certs (require to support sign and encryption)"
             },
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "extlib/xmlseclibs",
-                    "lib/Saml",
-                    "lib/Saml2"
-                ]
+                "psr-4": {
+                    "OneLogin\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1031,7 +1021,7 @@
                 "onelogin",
                 "saml"
             ],
-            "time": "2018-06-17T08:10:08+00:00"
+            "time": "2018-08-02T15:43:25+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -1375,6 +1365,46 @@
                 "uuid"
             ],
             "time": "2018-07-19T23:38:55+00:00"
+        },
+        {
+            "name": "robrichards/xmlseclibs",
+            "version": "3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/robrichards/xmlseclibs.git",
+                "reference": "d937712f70f93a584eb0299ccd87dc6374003781"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/robrichards/xmlseclibs/zipball/d937712f70f93a584eb0299ccd87dc6374003781",
+                "reference": "d937712f70f93a584eb0299ccd87dc6374003781",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">= 5.4"
+            },
+            "suggest": {
+                "ext-openssl": "OpenSSL extension"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RobRichards\\XMLSecLibs\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "A PHP library for XML Security",
+            "homepage": "https://github.com/robrichards/xmlseclibs",
+            "keywords": [
+                "security",
+                "signature",
+                "xml",
+                "xmldsig"
+            ],
+            "time": "2017-08-31T09:27:07+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -4223,7 +4253,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "aacotroneo/laravel-saml2": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
