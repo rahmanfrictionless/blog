@@ -145,3 +145,19 @@ jobs:
       - run:
          name: Test 2 - Run Laravel Desk for Browser Testing
          command: php artisan dusk
+
+      # Store test results
+      - store_test_results:
+          path: tests/_output
+
+      # Store artifacts
+      - store_artifacts:
+          path: tests/_output
+
+      - store_artifacts:
+          path: ./tests/Browser/console
+          destination: console
+
+      - store_artifacts:
+          path: ./tests/Browser/screenshots
+          destination: screenshots
