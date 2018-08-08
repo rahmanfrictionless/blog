@@ -1,0 +1,26 @@
+language: php
+
+php:
+  - 7.2
+
+before_install:
+  - sudo apt-get install -y libsqlite3-dev
+  - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+  - sudo apt-get install -y nodejs
+
+
+before_script:
+  - cp .env.dusk.tesing .env
+  - mysql -e 'create database homestead_test;'
+  - composer self-update
+  - composer install -n --prefer-dist --ignore-platform-reqs
+  - php artisan key:generate
+  - touch database/database.sqlite
+  - php artisan migrate --env=testing --force
+  - php artisan db:seed
+  - php artisan dusk
+
+script:
+  - ./vendor/laravel/dusk/bin/chromedriver-linux
+  - php artisan serve
+  - vendor/bin/phpunit
