@@ -1,65 +1,37 @@
 # PHP CircleCI 2.0 configuration file
 #
 # Check https://circleci.com/docs/2.0/language-php/ for more details
+# Check https://medium.com/@helovamut/testing-with-laravel-dusk-circleci-c36277210eb3 for more details
+# Check https://medium.com/@james_fairhurst/laravel-dusk-on-circleci-60bbe3872065 for more details
 #
 version: 2
-jobs:
-  build:
-    docker:
-      # Specify the version you desire here
-      - image: circleci/php:7.1-jessie-node-browsers
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # Using the RAM variation mitigates I/O contention
-      # for database intensive operations.
-      # - image: circleci/mysql:5.7-ram
-      #
-      # - image: redis:2.8.19
-
-    steps:
-      - checkout
-
-      - run: sudo apt update && sudo apt install zlib1g-dev libsqlite3-dev
-      - run: sudo docker-php-ext-install zip
-      # Download and cache dependencies
-
-      # composer cache
-      - restore_cache:
-          keys:
-          # "composer.lock" can be used if it is committed to the repo
-          - v1-dependencies-{{ checksum "composer.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-      - run: composer install -n --prefer-dist
-
-      - save_cache:
-          key: composer-v1-{{ checksum "composer.lock" }}
-          paths:
-            - vendor
-
-      # node cache
-
-      - restore_cache:
-          keys:
-            - node-v3-{{ checksum "package.json" }}
-            - node-v3-
-      - run: yarn install
-      - save_cache:
-          key: node-v3-{{ checksum "package.json" }}
-          paths:
-            - node_modules
-
-      # prepare the database
-      - run: touch storage/testing.sqlite
-      - run: php artisan migrate --env=testing --database=sqlite_testing --force
-
-      # run tests with phpunit or codecept
-      #- run: ./vendor/bin/phpunit
-      - run: ./vendor/bin/codecept build
-      - run: ./vendor/bin/codecept run --xml result.xml
-      - store_test_results:
-          path: tests/_output
-      - store_artifacts:
-          path: tests/_output
+machine:
+  hosts:
+    myapp.dev: 127.0.0.1
+  php:
+    version: 7.2
+  services:
+    - mysql
+  post:
+    - chromedriver:
+        background: true
+dependencies:
+  pre:
+    - sudo composer self-update
+  post:
+    - sudo ln -s /opt/circleci/.phpenv/shims/php /usr/local/bin/php
+    - sudo cp /opt/circleci/.phpenv/shims/php /usr/bin/php
+    - cp .env.dusk.testing .env
+    - "sudo php artisan serve --host=myapp.dev --port=8080 > server.log 2>&1":
+        background: true
+    - "sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080"
+    - "sudo iptables -t nat -I OUTPUT -p tcp -d 127.0.0.1 --dport 80 -j REDIRECT --to-ports 8080"
+general:
+  artifacts:
+    - "tests/Browser/screenshots"
+    - "tests/Browser/console"
+    - "server.log"
+test:
+  override:
+     - php artisan dusk
+     - vendor/bin/phpunit
