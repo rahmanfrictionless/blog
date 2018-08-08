@@ -4,7 +4,6 @@
 # Check https://medium.com/@helovamut/testing-with-laravel-dusk-circleci-c36277210eb3 for more details
 # Check https://medium.com/@james_fairhurst/laravel-dusk-on-circleci-60bbe3872065 for more details
 #
-version: 2
 machine:
   hosts:
     myapp.dev: 127.0.0.1
