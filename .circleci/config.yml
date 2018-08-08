@@ -1,5 +1,6 @@
 # PHP CircleCI 2.0 configuration file
 #
+# Check for configuration changes in https://circleci.com/docs/2.0/configuration-reference/
 # Check https://circleci.com/docs/2.0/language-php/ for more details
 # Check https://medium.com/@helovamut/testing-with-laravel-dusk-circleci-c36277210eb3 for more details
 # Check https://medium.com/@james_fairhurst/laravel-dusk-on-circleci-60bbe3872065 for more details
@@ -11,22 +12,42 @@ jobs:
   build:
     docker:
       - image: circleci/php:7.2-browsers
+
+      # Update the .env file DB_CONNECTION to mysql to enable this.
+      #environment:
+      #  MYSQL_HOST: 127.0.0.1
+      #  MYSQL_DB: mate
+      #  MYSQL_USER: root
+      #  MYSQL_ALLOW_EMPTY_PASSWORD: true
+      #  MYSQL_PASSWORD:
+      #- image: mysql:5.7
+      #  command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true --innodb-file-format=Barracuda
+      #  environment:
+      #    MYSQL_USER: root
+      #    MYSQL_ALLOW_EMPTY_PASSWORD: true
+
+    # Add the working directory
     working_directory: ~/blog
     steps:
       - checkout
 
+      #sqlite needed for laravel database
+      - run:
+         name: Install sqlite
+         command: sudo apt-get install -y libsqlite3-dev
+
+      #- run: sudo apt install -y libsqlite3-dev zlib1g-dev
+      #- run: sudo docker-php-ext-install zip
       #https://askubuntu.com/questions/594656/how-to-install-the-latest-versions-of-nodejs-and-npm
       #We are using Node JS 6 because that's the current version on our local vagrant/homestead machines
       - run:
          name: Download NodeJS v6
          command: curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 
-      #sqlite needed for laravel database
       #nodejs6 needed to run `npm run watch` later
       - run:
-         name: Install PHP sqlite and nodejs 6
-         command: sudo apt-get install -y libsqlite3-dev nodejs
-
+         name: Install nodejs 6
+         command: sudo apt-get install -y nodejs
 
       # Leave this for future use if php-zip is ever required
       # If you remove the flag 'composer install --ignore-platform-reqs`
@@ -44,14 +65,23 @@ jobs:
       #   name: Install zip package for PHP
       #   command: sudo docker-php-ext-install zip
 
+      # Update the .env file DB_CONNECTION to mysql to enable this.
+      #- run:
+      #    name: Mysql database
+      #    command: mysql  -h 127.0.0.1 -u root -e "create database mate;"
+
+      # Copy the dusk testing env as the env
       - run:
          name: Setup Laravel testing environment variables for CircleCI test
          command: cp .env.dusk.testing .env
 
+      # Update the composer, this is not the dependencies
       - run:
          name: Update composer to latest version
          command: composer self-update
 
+      # https://circleci.com/docs/2.0/caching/
+      # Get the caching version of composer for faster testing
       - restore_cache:
           keys:
             - composer-v1-{{ checksum "composer.json" }}
@@ -61,9 +91,9 @@ jobs:
           key: composer-v1-{{ checksum "composer.json" }}
           paths:
             - vendor
-
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
+
       #- run:
       #    name: Install NodeJS Packages
       #    command: npm install
@@ -72,14 +102,17 @@ jobs:
       #    paths:
       #      - ./node_modules
 
+      # Create a sqlite database. This is coming from the .env file
       - run:
          name: Create SQLite Database
          command: touch database/database.sqlite
 
+      # Migrate the database with testing env flag
       - run:
          name: Migrate Laravel Database
          command: php artisan migrate --env=testing --force
 
+      # Seed the database
       - run:
          name: Seed the database
          command: php artisan db:seed
@@ -93,15 +126,18 @@ jobs:
          command: ./vendor/laravel/dusk/bin/chromedriver-linux
          background: true
 
+      # Serve the application
       - run:
          name: Run Laravel Server
          command: php artisan serve
          background: true
 
+      # Run the phpunit tests
       - run:
          name: Test 1 - Run Phpunit for Server-Side HTTP Requests & PHP Unit Testing
          command: vendor/bin/phpunit
 
+      # Run the dusk tests
       - run:
          name: Test 2 - Run Laravel Desk for Browser Testing
          command: php artisan dusk
