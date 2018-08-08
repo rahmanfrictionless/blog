@@ -1,3 +1,10 @@
+sudo: required
+
+dist: trusty
+
+addons:
+   chrome: stable
+
 language: php
 
 php:
@@ -8,19 +15,21 @@ before_install:
   - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
   - sudo apt-get install -y nodejs
 
+install:
+   - cp .env.dusk.tesing .env
+   - travis_retry composer install --no-interaction --prefer-dist --no-suggest
 
 before_script:
-  - cp .env.dusk.tesing .env
-  - mysql -e 'create database homestead_test;'
-  - composer self-update
-  - composer install -n --prefer-dist --ignore-platform-reqs
+  - travis_retry composer self-update
   - php artisan key:generate
   - touch database/database.sqlite
   - php artisan migrate --env=testing --force
   - php artisan db:seed
-  - php artisan dusk
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+  - php artisan serve &
 
 script:
   - ./vendor/laravel/dusk/bin/chromedriver-linux
   - php artisan serve
   - vendor/bin/phpunit
+  - php artisan dusk
