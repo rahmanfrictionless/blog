@@ -3,10 +3,8 @@
 # Check https://circleci.com/docs/2.0/language-php/ for more details
 # Check https://medium.com/@helovamut/testing-with-laravel-dusk-circleci-c36277210eb3 for more details
 # Check https://medium.com/@james_fairhurst/laravel-dusk-on-circleci-60bbe3872065 for more details
+# Check https://medium.com/@wesmahler/circleci-2-0-configuration-for-laravel-5-5-with-laravel-dusk-ab1cc9b9d4a7 for more details
 #
-# PHP CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-php/ for more details
 #
 version: 2
 jobs:
@@ -48,7 +46,7 @@ jobs:
 
       - run:
          name: Setup Laravel testing environment variables for CircleCI test
-         command: cp .env.testing .env
+         command: cp .env.dusk.testing .env
 
       - run:
          name: Update composer to latest version
