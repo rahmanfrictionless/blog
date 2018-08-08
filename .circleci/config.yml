@@ -94,9 +94,7 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
 
-      - run:
-        command: php artisan key:generate
-        name: Setting the application key
+      - run: php artisan key:generate
 
       #- run:
       #    name: Install NodeJS Packages
