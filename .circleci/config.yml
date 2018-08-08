@@ -64,13 +64,13 @@ jobs:
 
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install NodeJS Packages
-          command: npm install
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
+      #- run:
+      #    name: Install NodeJS Packages
+      #    command: npm install
+      #- save_cache:
+      #    key: dependency-cache-{{ checksum "package.json" }}
+      #    paths:
+      #      - ./node_modules
 
       - run:
          name: Create SQLite Database
@@ -81,8 +81,12 @@ jobs:
          command: php artisan migrate --env=testing --force
 
       - run:
-         name: Compile Javascript & CSS for Browser Testing
-         command: npm run production
+         name: Seed the database
+         command: php artisan db:seed
+
+      #- run:
+      #   name: Compile Javascript & CSS for Browser Testing
+      #   command: npm run production
 
       - run:
          name: Start Chrome Driver
