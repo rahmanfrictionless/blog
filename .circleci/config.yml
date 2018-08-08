@@ -23,9 +23,6 @@ jobs:
 
       - run: sudo apt update && sudo apt install zlib1g-dev libsqlite3-dev
       - run: sudo docker-php-ext-install zip
-      # Install mycrypt for the docker image
-      - run: yes '' | pecl install -f mcrypt
-      - run: echo "extension=mcrypt.so" > /usr/local/etc/php/conf.d/mcrypt.ini
       # Download and cache dependencies
 
       # composer cache
