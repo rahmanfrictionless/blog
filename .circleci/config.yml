@@ -95,7 +95,7 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
 
       - run:
-        name: Set the application key
+        name: Setting the application key
         command: php artisan key:generate
 
       #- run:
