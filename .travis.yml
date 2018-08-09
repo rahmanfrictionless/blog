@@ -28,11 +28,11 @@ before_script:
   - php artisan migrate --env=testing --force
   - php artisan db:seed
   #- google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost
-  - php artisan serve
+  #- php artisan serve
 
 script:
-  - ./vendor/laravel/dusk/bin/chromedriver-linux
-  - php artisan serve
+  #- ./vendor/laravel/dusk/bin/chromedriver-linux
+  #- php artisan serve
   - vendor/bin/phpunit
   #- php artisan dusk
 
